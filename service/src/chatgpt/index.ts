@@ -70,7 +70,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   else {
     const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const options: ChatGPTUnofficialProxyAPIOptions = {
-      accessToken: process.env.OPENAI_ACCESS_TOKEN,
+      accessToken: json.OPENAI_ACCESS_TOKEN,
       debug: true,
     }
     if (isNotEmptyString(OPENAI_API_MODEL))
