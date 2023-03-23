@@ -9,6 +9,7 @@ import axios from 'axios'
 import { sendResponse } from '../utils'
 import { isNotEmptyString } from '../utils/is'
 import type { ApiModel, ChatContext, ChatGPTUnofficialProxyAPIOptions, ModelConfig } from '../types'
+import json from '../../env.json'
 import type { RequestOptions } from './types'
 
 dotenv.config()
@@ -26,7 +27,7 @@ const timeoutMs: number = !isNaN(+process.env.TIMEOUT_MS) ? +process.env.TIMEOUT
 
 let apiModel: ApiModel
 
-if (!isNotEmptyString(process.env.OPENAI_API_KEY) && !isNotEmptyString(process.env.OPENAI_ACCESS_TOKEN))
+if (!isNotEmptyString(json.OPENAI_API_KEY) && !isNotEmptyString(json.OPENAI_ACCESS_TOKEN))
   throw new Error('Missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN environment variable')
 
 let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
@@ -75,8 +76,9 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     if (isNotEmptyString(OPENAI_API_MODEL))
       options.model = OPENAI_API_MODEL
 
-    if (isNotEmptyString(process.env.API_REVERSE_PROXY))
-      options.apiReverseProxyUrl = process.env.API_REVERSE_PROXY
+    // if (isNotEmptyString(process.env.API_REVERSE_PROXY))
+    if (isNotEmptyString(json.API_REVERSE_PROXY))
+      options.apiReverseProxyUrl = json.API_REVERSE_PROXY
 
     setupProxy(options)
 
@@ -144,7 +146,7 @@ async function fetchBalance() {
 
 async function chatConfig() {
   const balance = await fetchBalance()
-  const reverseProxy = process.env.API_REVERSE_PROXY ?? '-'
+  const reverseProxy = json.API_REVERSE_PROXY ?? '-'
   const httpsProxy = (process.env.HTTPS_PROXY || process.env.ALL_PROXY) ?? '-'
   const socksProxy = (process.env.SOCKS_PROXY_HOST && process.env.SOCKS_PROXY_PORT)
     ? (`${process.env.SOCKS_PROXY_HOST}:${process.env.SOCKS_PROXY_PORT}`)
