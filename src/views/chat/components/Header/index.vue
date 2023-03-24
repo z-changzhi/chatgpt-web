@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, nextTick } from 'vue'
-import { HoverButton, SvgIcon } from '@/components/common'
+import { SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 
 interface Props {
@@ -61,7 +61,7 @@ function toggleUsingContext() {
       >
         {{ currentChatHistory?.title ?? '' }}
       </h1>
-      <div class="flex items-center space-x-2">
+      <!-- <div class="flex items-center space-x-2">
         <HoverButton @click="toggleUsingContext">
           <span class="text-xl" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }">
             <SvgIcon icon="ri:chat-history-line" />
@@ -72,7 +72,7 @@ function toggleUsingContext() {
             <SvgIcon icon="ri:download-2-line" />
           </span>
         </HoverButton>
-      </div>
+      </div> -->
     </div>
   </header>
 </template>
