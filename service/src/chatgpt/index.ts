@@ -34,7 +34,10 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
 
 (async () => {
   // More Info: https://github.com/transitive-bullshit/chatgpt-api
-
+  const res = await getRandom()
+  let openAiAccessToken: string = json.OPENAI_ACCESS_TOKEN
+  if (res.result)
+    openAiAccessToken = res.result
   if (isNotEmptyString(process.env.OPENAI_API_KEY)) {
     const OPENAI_API_BASE_URL = process.env.OPENAI_API_BASE_URL
     const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
@@ -70,7 +73,7 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
   else {
     const OPENAI_API_MODEL = process.env.OPENAI_API_MODEL
     const options: ChatGPTUnofficialProxyAPIOptions = {
-      accessToken: json.OPENAI_ACCESS_TOKEN,
+      accessToken: openAiAccessToken,
       debug: true,
     }
     if (isNotEmptyString(OPENAI_API_MODEL))
@@ -86,6 +89,17 @@ let api: ChatGPTAPI | ChatGPTUnofficialProxyAPI
     apiModel = 'ChatGPTUnofficialProxyAPI'
   }
 })()
+async function getRandom() {
+  const API_BASE_URL = json.AXIOS_BASE_URL || 'https://127.0.0.1'
+  try {
+    const headers = { 'Content-Type': 'application/json' }
+    const response = await axios.get(`${API_BASE_URL}/gpt/get_random?verify=ZXpub3Rleg%3D%3D`, { headers })
+    return Promise.resolve(response.data)
+  }
+  catch {
+    return Promise.resolve('-')
+  }
+}
 
 async function chatReplyProcess(options: RequestOptions) {
   const { message, lastContext, process, systemMessage } = options
