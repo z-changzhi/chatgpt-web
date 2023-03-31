@@ -14,8 +14,9 @@ import HeaderComponent from './components/Header/index.vue'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
-import { fetchChatAPIProcess } from '@/api'
+import { fetchChatAPIProcess, fetchGetRandomToken } from '@/api'
 import { t } from '@/locales'
+import { s1 } from '@/utils/storage'
 
 let controller = new AbortController()
 
@@ -57,6 +58,31 @@ dataSources.value.forEach((item, index) => {
 
 function handleSubmit() {
   onConversation()
+}
+
+const token = ref<string>('')
+onMounted(() => {
+  getRandom()
+})
+function getRandom() {
+  if (!token.value) {
+    const dbToken = s1.get('token')
+
+    if (dbToken) {
+      // 如果缓存存在
+      token.value = dbToken
+    }
+    else {
+      // 如果也是空
+      fetchGetRandomToken()
+        .then((res) => {
+          // s1.set('token', error.result)
+        })
+        .catch((error) => {
+          s1.set('token', error.result)
+        })
+    }
+  }
 }
 
 async function onConversation() {
@@ -150,6 +176,7 @@ async function onConversation() {
           //
           }
         },
+        accessToken: token.value,
       })
     }
 

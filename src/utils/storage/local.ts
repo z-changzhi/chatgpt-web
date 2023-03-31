@@ -68,3 +68,5 @@ export function createLocalStorage(options?: { expire?: number | null; crypto?: 
 export const ls = createLocalStorage()
 
 export const ss = createLocalStorage({ expire: null, crypto: false })
+
+export const s1 = createLocalStorage({ expire: 60 * 60 * 24 * 1, crypto: false })

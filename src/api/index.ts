@@ -20,18 +20,25 @@ export function fetchChatConfig<T = any>() {
   })
 }
 
+export function fetchGetRandomToken<T = any>() {
+  return post<T>({
+    url: '/getRandom',
+  })
+}
+
 export function fetchChatAPIProcess<T = any>(
   params: {
     prompt: string
     options?: { conversationId?: string; parentMessageId?: string }
     signal?: GenericAbortSignal
-    onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
-) {
+    onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void
+    accessToken?: string
+  }) {
   const settingStore = useSettingStore()
 
   return post<T>({
     url: '/chat-process',
-    data: { prompt: params.prompt, options: params.options, systemMessage: settingStore.systemMessage },
+    data: { prompt: params.prompt, options: params.options, systemMessage: settingStore.systemMessage, accessToken: params.accessToken },
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,
   })
