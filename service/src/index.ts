@@ -1,7 +1,7 @@
 import express from 'express'
 import type { RequestProps } from './types'
 import type { ChatMessage } from './chatgpt'
-import { chatConfig, chatReplyProcess, currentModel } from './chatgpt'
+import { chatConfig, chatReplyProcess, currentModel, getRandom } from './chatgpt'
 import { auth } from './middleware/auth'
 import { limiter } from './middleware/limiter'
 import { isNotEmptyString } from './utils/is'
@@ -23,7 +23,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   res.setHeader('Content-type', 'application/octet-stream')
 
   try {
-    const { prompt, options = {}, systemMessage } = req.body as RequestProps
+    const { prompt, options = {}, systemMessage, accessToken } = req.body as RequestProps
     let firstChunk = true
     await chatReplyProcess({
       message: prompt,
@@ -33,6 +33,7 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
         firstChunk = false
       },
       systemMessage,
+      accessToken,
     })
   }
   catch (error) {
@@ -42,7 +43,15 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
     res.end()
   }
 })
-
+router.post('/getRandom', auth, async (req, res) => {
+  try {
+    const response = await getRandom()
+    res.send(response)
+  }
+  catch (error) {
+    res.send(error)
+  }
+})
 router.post('/config', auth, async (req, res) => {
   try {
     const response = await chatConfig()

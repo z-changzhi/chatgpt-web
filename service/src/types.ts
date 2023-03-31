@@ -4,6 +4,7 @@ export interface RequestProps {
   prompt: string
   options?: ChatContext
   systemMessage: string
+  accessToken: string
 }
 
 export interface ChatContext {
